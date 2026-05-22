@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assembly Tracking - Car Manufacturing System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="wrapper">
+    <nav class="sidebar">
+        <div class="sidebar-brand">
+            <div class="brand-icon"><i class="bi bi-car-front-fill"></i></div>
+            <div class="brand-text"><h6>CAR MFG SYS</h6><span>Management Portal</span></div>
+        </div>
+        <div class="sidebar-nav">
+            <span class="nav-section-title">Main</span>
+            <a href="dashboard.html" class="nav-link"><i class="bi bi-speedometer2"></i><span>Dashboard</span></a>
+            <span class="nav-section-title">Manufacturing</span>
+            <a href="carmodels.html" class="nav-link"><i class="bi bi-car-front"></i><span>Car Models</span></a>
+            <a href="inventory.html" class="nav-link"><i class="bi bi-boxes"></i><span>Inventory</span></a>
+            <a href="suppliers.html" class="nav-link"><i class="bi bi-truck"></i><span>Suppliers</span></a>
+            <a href="orders.html" class="nav-link"><i class="bi bi-clipboard-data"></i><span>Mfg Orders</span></a>
+            <a href="assembly.html" class="nav-link"><i class="bi bi-gear-wide-connected"></i><span>Assembly</span></a>
+            <span class="nav-section-title">Business</span>
+            <a href="employees.html" class="nav-link"><i class="bi bi-people"></i><span>Employees</span></a>
+            <a href="sales.html" class="nav-link"><i class="bi bi-graph-up-arrow"></i><span>Sales</span></a>
+            <a href="reports.html" class="nav-link"><i class="bi bi-bar-chart-line"></i><span>Reports</span></a>
+        </div>
+    </nav>
+
+    <div class="main-content">
+        <nav class="top-navbar">
+            <div class="page-title"><i class="bi bi-gear-wide-connected me-2 text-primary"></i>Assembly Tracking</div>
+            <div class="nav-right">
+                <div class="user-badge">
+                    <div class="avatar" id="userAvatar">A</div>
+                    <div><div class="name" id="userName">Admin</div><div style="font-size:0.7rem;color:#94a3b8" id="userRole">Admin</div></div>
+                </div>
+                <button class="btn-logout" onclick="logout()"><i class="bi bi-box-arrow-right me-1"></i>Logout</button>
+            </div>
+        </nav>
+
+        <div class="page-content">
+            <div class="page-header">
+                <div><h1>Assembly Tracking</h1><p>Monitor production stages and assembly progress</p></div>
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#asmModal" onclick="openAddModal()">
+                    <i class="bi bi-plus-circle me-2"></i>Add Assembly Record
+                </button>
+            </div>
+
+            <div class="table-card">
+                <div class="table-card-header">
+                    <span><i class="bi bi-table me-2 text-primary"></i>Assembly Records</span>
+                    <span class="badge bg-primary rounded-pill" id="asmCount">0</span>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Order No.</th>
+                                <th>Car Model</th>
+                                <th>Assigned To</th>
+                                <th>Stage</th>
+                                <th>Progress</th>
+                                <th>Start Time</th>
+                                <th>End Time</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="asmTableBody">
+                            <tr><td colspan="10" class="text-center py-4 text-muted"><div class="spinner-border spinner-border-sm me-2"></div>Loading...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal fade" id="asmModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalTitle"><i class="bi bi-gear-wide-connected me-2"></i>Add Assembly Record</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-4">
+                <input type="hidden" id="asmId">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Manufacturing Order *</label>
+                        <select class="form-select" id="orderId" required>
+                            <option value="">-- Select Order --</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Assigned Employee</label>
+                        <select class="form-select" id="employeeId">
+                            <option value="">-- Select Employee --</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Assembly Stage *</label>
+                        <select class="form-select" id="stage" required>
+                            <option value="">-- Select Stage --</option>
+                            <option>Design Review</option>
+                            <option>Frame Assembly</option>
+                            <option>Engine Installation</option>
+                            <option>Electrical Wiring</option>
+                            <option>Interior Fitting</option>
+                            <option>Exterior Painting</option>
+                            <option>Quality Check</option>
+                            <option>Final Inspection</option>
+                            <option>Packaging & Dispatch</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Status</label>
+                        <select class="form-select" id="asmStatus">
+                            <option value="Not Started">Not Started</option>
+                            <option value="In Progress">In Progress</option>
+                            <option value="Completed">Completed</option>
+                            <option value="On Hold">On Hold</option>
+                        </select>
+                    </div>
+                    <div class="col-md-12">
+                        <label class="form-label">Progress: <span id="progressLabel">0</span>%</label>
+                        <input type="range" class="form-range" id="progress" min="0" max="100" value="0"
+                               oninput="document.getElementById('progressLabel').textContent = this.value">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Start Time</label>
+                        <input type="datetime-local" class="form-control" id="startTime">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">End Time</label>
+                        <input type="datetime-local" class="form-control" id="endTime">
+                    </div>
+                    <div class="col-md-12">
+                        <label class="form-label">Notes</label>
+                        <textarea class="form-control" id="asmNotes" rows="2" placeholder="Optional notes about this assembly stage..."></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button class="btn btn-primary" id="saveAsmBtn" onclick="saveAssembly()"><i class="bi bi-save me-2"></i>Save Record</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="js/app.js"></script>
+<script>
+    checkAuth();
+    let allRecords = [];
+
+    // Load all assembly records from API
+    async function loadAssembly() {
+        try {
+            const r = await fetch('/api/assembly');
+            const result = await r.json();
+            allRecords = result.data || [];
+            renderTable(allRecords);
+            document.getElementById('asmCount').textContent = allRecords.length;
+        } catch (err) {
+            document.getElementById('asmTableBody').innerHTML = '<tr><td colspan="10" class="text-center text-danger">Error loading data.</td></tr>';
+        }
+    }
+
+    // Load orders dropdown
+    async function loadOrders() {
+        try {
+            const r = await fetch('/api/orders');
+            const result = await r.json();
+            const sel = document.getElementById('orderId');
+            const opts = (result.data || []).map(o => `<option value="${o.id}">${o.order_number} — ${o.model_name || 'N/A'}</option>`).join('');
+            sel.innerHTML = '<option value="">-- Select Order --</option>' + opts;
+        } catch (err) {}
+    }
+
+    // Load employees dropdown
+    async function loadEmployees() {
+        try {
+            const r = await fetch('/api/employees');
+            const result = await r.json();
+            const sel = document.getElementById('employeeId');
+            const opts = (result.data || []).filter(e => e.status === 'Active')
+                .map(e => `<option value="${e.id}">${e.first_name} ${e.last_name} (${e.department || 'N/A'})</option>`).join('');
+            sel.innerHTML = '<option value="">-- Select Employee --</option>' + opts;
+        } catch (err) {}
+    }
+
+    // Get progress bar color based on value
+    function getProgressColor(progress) {
+        if (progress >= 100) return 'bg-success';
+        if (progress >= 60) return 'bg-primary';
+        if (progress >= 30) return 'bg-warning';
+        return 'bg-danger';
+    }
+
+    // Render table rows
+    function renderTable(records) {
+        const tbody = document.getElementById('asmTableBody');
+        if (records.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="10" class="text-center text-muted py-4">No assembly records found.</td></tr>';
+            return;
+        }
+        tbody.innerHTML = records.map((rec, i) => `
+            <tr>
+                <td>${i + 1}</td>
+                <td><strong>${rec.order_number || '-'}</strong></td>
+                <td>${rec.model_name || '-'}</td>
+                <td>${rec.employee_name || '<span class="text-muted">Unassigned</span>'}</td>
+                <td>${rec.stage}</td>
+                <td style="min-width:130px">
+                    <div class="d-flex align-items-center gap-2">
+                        <div class="progress flex-grow-1" style="height:8px">
+                            <div class="progress-bar ${getProgressColor(rec.progress)}" style="width:${rec.progress}%"></div>
+                        </div>
+                        <small class="text-muted" style="white-space:nowrap">${rec.progress}%</small>
+                    </div>
+                </td>
+                <td><small>${rec.start_time ? formatDateTime(rec.start_time) : '-'}</small></td>
+                <td><small>${rec.end_time ? formatDateTime(rec.end_time) : '-'}</small></td>
+                <td>${getStatusBadge(rec.status)}</td>
+                <td>
+                    <button class="action-btn btn-edit me-1" onclick="openEditModal(${rec.id})"><i class="bi bi-pencil"></i> Edit</button>
+                    <button class="action-btn btn-delete" onclick="deleteRecord(${rec.id})"><i class="bi bi-trash"></i> Delete</button>
+                </td>
+            </tr>
+        `).join('');
+    }
+
+    // Open modal for adding
+    function openAddModal() {
+        document.getElementById('modalTitle').innerHTML = '<i class="bi bi-plus-circle me-2"></i>Add Assembly Record';
+        document.getElementById('asmId').value = '';
+        document.getElementById('orderId').value = '';
+        document.getElementById('employeeId').value = '';
+        document.getElementById('stage').value = '';
+        document.getElementById('asmStatus').value = 'Not Started';
+        document.getElementById('progress').value = 0;
+        document.getElementById('progressLabel').textContent = '0';
+        document.getElementById('startTime').value = '';
+        document.getElementById('endTime').value = '';
+        document.getElementById('asmNotes').value = '';
+        loadOrders();
+        loadEmployees();
+    }
+
+    // Open modal for editing
+    function openEditModal(id) {
+        const rec = allRecords.find(r => r.id === id);
+        if (!rec) return;
+
+        Promise.all([loadOrders(), loadEmployees()]).then(() => {
+            document.getElementById('modalTitle').innerHTML = '<i class="bi bi-pencil me-2"></i>Edit Assembly Record';
+            document.getElementById('asmId').value = rec.id;
+            document.getElementById('orderId').value = rec.order_id || '';
+            document.getElementById('employeeId').value = rec.employee_id || '';
+            document.getElementById('stage').value = rec.stage;
+            document.getElementById('asmStatus').value = rec.status;
+            document.getElementById('progress').value = rec.progress;
+            document.getElementById('progressLabel').textContent = rec.progress;
+
+            // Format datetime for input fields (needs YYYY-MM-DDTHH:MM format)
+            if (rec.start_time) {
+                document.getElementById('startTime').value = rec.start_time.slice(0, 16);
+            } else {
+                document.getElementById('startTime').value = '';
+            }
+            if (rec.end_time) {
+                document.getElementById('endTime').value = rec.end_time.slice(0, 16);
+            } else {
+                document.getElementById('endTime').value = '';
+            }
+            document.getElementById('asmNotes').value = rec.notes || '';
+            new bootstrap.Modal(document.getElementById('asmModal')).show();
+        });
+    }
+
+    // Save assembly record (create or update)
+    async function saveAssembly() {
+        const id = document.getElementById('asmId').value;
+        const payload = {
+            order_id: document.getElementById('orderId').value,
+            employee_id: document.getElementById('employeeId').value || null,
+            stage: document.getElementById('stage').value,
+            progress: parseInt(document.getElementById('progress').value),
+            start_time: document.getElementById('startTime').value || null,
+            end_time: document.getElementById('endTime').value || null,
+            status: document.getElementById('asmStatus').value,
+            notes: document.getElementById('asmNotes').value.trim()
+        };
+
+        if (!payload.order_id || !payload.stage) {
+            showToast('Order and Stage are required', 'warning');
+            return;
+        }
+
+        const btn = document.getElementById('saveAsmBtn');
+        setButtonLoading(btn, true);
+        try {
+            if (id) {
+                await apiPut(`/assembly/${id}`, payload);
+                showToast('Assembly record updated!', 'success');
+            } else {
+                await apiPost('/assembly', payload);
+                showToast('Assembly record added!', 'success');
+            }
+            bootstrap.Modal.getInstance(document.getElementById('asmModal')).hide();
+            loadAssembly();
+        } catch (err) {
+            showToast(`Error: ${err.message}`, 'error');
+        } finally {
+            setButtonLoading(btn, false);
+        }
+    }
+
+    // Delete assembly record
+    async function deleteRecord(id) {
+        if (!confirmDelete()) return;
+        try {
+            await apiDelete(`/assembly/${id}`);
+            showToast('Record deleted', 'success');
+            loadAssembly();
+        } catch (err) {
+            showToast(`Error: ${err.message}`, 'error');
+        }
+    }
+
+    // Run on page load
+    loadAssembly();
+</script>
+</body>
+</html>

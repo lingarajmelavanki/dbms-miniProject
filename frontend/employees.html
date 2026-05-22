@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employees - Car Manufacturing System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="wrapper">
+    <nav class="sidebar">
+        <div class="sidebar-brand">
+            <div class="brand-icon"><i class="bi bi-car-front-fill"></i></div>
+            <div class="brand-text"><h6>CAR MFG SYS</h6><span>Management Portal</span></div>
+        </div>
+        <div class="sidebar-nav">
+            <span class="nav-section-title">Main</span>
+            <a href="dashboard.html" class="nav-link"><i class="bi bi-speedometer2"></i><span>Dashboard</span></a>
+            <span class="nav-section-title">Manufacturing</span>
+            <a href="carmodels.html" class="nav-link"><i class="bi bi-car-front"></i><span>Car Models</span></a>
+            <a href="inventory.html" class="nav-link"><i class="bi bi-boxes"></i><span>Inventory</span></a>
+            <a href="suppliers.html" class="nav-link"><i class="bi bi-truck"></i><span>Suppliers</span></a>
+            <a href="orders.html" class="nav-link"><i class="bi bi-clipboard-data"></i><span>Mfg Orders</span></a>
+            <a href="assembly.html" class="nav-link"><i class="bi bi-gear-wide-connected"></i><span>Assembly</span></a>
+            <span class="nav-section-title">Business</span>
+            <a href="employees.html" class="nav-link"><i class="bi bi-people"></i><span>Employees</span></a>
+            <a href="sales.html" class="nav-link"><i class="bi bi-graph-up-arrow"></i><span>Sales</span></a>
+            <a href="reports.html" class="nav-link"><i class="bi bi-bar-chart-line"></i><span>Reports</span></a>
+        </div>
+    </nav>
+
+    <div class="main-content">
+        <nav class="top-navbar">
+            <div class="page-title"><i class="bi bi-people me-2 text-primary"></i>Employees</div>
+            <div class="nav-right">
+                <div class="user-badge">
+                    <div class="avatar" id="userAvatar">A</div>
+                    <div><div class="name" id="userName">Admin</div><div style="font-size:0.7rem;color:#94a3b8" id="userRole">Admin</div></div>
+                </div>
+                <button class="btn-logout" onclick="logout()"><i class="bi bi-box-arrow-right me-1"></i>Logout</button>
+            </div>
+        </nav>
+
+        <div class="page-content">
+            <div class="page-header">
+                <div><h1>Employees</h1><p>Manage your workforce and HR records</p></div>
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#empModal" onclick="openAddModal()">
+                    <i class="bi bi-person-plus me-2"></i>Add Employee
+                </button>
+            </div>
+
+            <div class="table-card">
+                <div class="table-card-header">
+                    <span><i class="bi bi-table me-2 text-primary"></i>All Employees</span>
+                    <span class="badge bg-primary rounded-pill" id="empCount">0</span>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr><th>#</th><th>Full Name</th><th>Email</th><th>Phone</th><th>Department</th><th>Position</th><th>Salary</th><th>Hire Date</th><th>Status</th><th>Actions</th></tr>
+                        </thead>
+                        <tbody id="empTableBody">
+                            <tr><td colspan="10" class="text-center py-4 text-muted"><div class="spinner-border spinner-border-sm me-2"></div>Loading...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal fade" id="empModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalTitle"><i class="bi bi-person-plus me-2"></i>Add Employee</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-4">
+                <input type="hidden" id="empId">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label">First Name *</label>
+                        <input type="text" class="form-control" id="firstName" placeholder="e.g. James" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Last Name *</label>
+                        <input type="text" class="form-control" id="lastName" placeholder="e.g. Wilson" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-control" id="empEmail" placeholder="james.wilson@company.com">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Phone</label>
+                        <input type="text" class="form-control" id="empPhone" placeholder="555-2001">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Department</label>
+                        <select class="form-select" id="department">
+                            <option value="">-- Select Department --</option>
+                            <option>Assembly</option>
+                            <option>Engineering</option>
+                            <option>Quality Control</option>
+                            <option>Sales</option>
+                            <option>HR</option>
+                            <option>Inventory</option>
+                            <option>Finance</option>
+                            <option>Management</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Position</label>
+                        <input type="text" class="form-control" id="position" placeholder="e.g. Assembly Technician">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Salary (USD/year)</label>
+                        <input type="number" class="form-control" id="salary" placeholder="55000" min="0" step="0.01">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Hire Date</label>
+                        <input type="date" class="form-control" id="hireDate">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Status</label>
+                        <select class="form-select" id="empStatus">
+                            <option value="Active">Active</option>
+                            <option value="Inactive">Inactive</option>
+                            <option value="On Leave">On Leave</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button class="btn btn-primary" id="saveEmpBtn" onclick="saveEmployee()"><i class="bi bi-save me-2"></i>Save Employee</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="js/app.js"></script>
+<script>
+    checkAuth();
+    let allEmployees = [];
+
+    async function loadEmployees() {
+        try {
+            const r = await fetch('/api/employees');
+            const result = await r.json();
+            allEmployees = result.data || [];
+            renderTable(allEmployees);
+            document.getElementById('empCount').textContent = allEmployees.length;
+        } catch (err) {
+            document.getElementById('empTableBody').innerHTML = '<tr><td colspan="10" class="text-center text-danger">Error loading data.</td></tr>';
+        }
+    }
+
+    function renderTable(employees) {
+        const tbody = document.getElementById('empTableBody');
+        if (employees.length === 0) { tbody.innerHTML = '<tr><td colspan="10" class="text-center text-muted py-4">No employees found.</td></tr>'; return; }
+        tbody.innerHTML = employees.map((e, i) => `
+            <tr>
+                <td>${i + 1}</td>
+                <td>
+                    <div style="display:flex;align-items:center;gap:8px">
+                        <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#1d4ed8,#3b82f6);display:flex;align-items:center;justify-content:center;color:white;font-weight:600;font-size:0.8rem;flex-shrink:0">${e.first_name.charAt(0)}${e.last_name.charAt(0)}</div>
+                        <strong>${e.first_name} ${e.last_name}</strong>
+                    </div>
+                </td>
+                <td>${e.email ? `<a href="mailto:${e.email}">${e.email}</a>` : '-'}</td>
+                <td>${e.phone || '-'}</td>
+                <td>${e.department || '-'}</td>
+                <td>${e.position || '-'}</td>
+                <td>${formatCurrency(e.salary)}</td>
+                <td>${formatDate(e.hire_date)}</td>
+                <td>${getStatusBadge(e.status)}</td>
+                <td>
+                    <button class="action-btn btn-edit me-1" onclick="openEditModal(${e.id})"><i class="bi bi-pencil"></i> Edit</button>
+                    <button class="action-btn btn-delete" onclick="deleteEmployee(${e.id})"><i class="bi bi-trash"></i> Delete</button>
+                </td>
+            </tr>
+        `).join('');
+    }
+
+    function openAddModal() {
+        document.getElementById('modalTitle').innerHTML = '<i class="bi bi-person-plus me-2"></i>Add Employee';
+        document.getElementById('empId').value = '';
+        ['firstName','lastName','empEmail','empPhone','position','salary'].forEach(id => document.getElementById(id).value = '');
+        document.getElementById('department').value = '';
+        document.getElementById('hireDate').value = '';
+        document.getElementById('empStatus').value = 'Active';
+    }
+
+    function openEditModal(id) {
+        const e = allEmployees.find(e => e.id === id);
+        if (!e) return;
+        document.getElementById('modalTitle').innerHTML = '<i class="bi bi-pencil me-2"></i>Edit Employee';
+        document.getElementById('empId').value = e.id;
+        document.getElementById('firstName').value = e.first_name;
+        document.getElementById('lastName').value = e.last_name;
+        document.getElementById('empEmail').value = e.email || '';
+        document.getElementById('empPhone').value = e.phone || '';
+        document.getElementById('department').value = e.department || '';
+        document.getElementById('position').value = e.position || '';
+        document.getElementById('salary').value = e.salary || '';
+        document.getElementById('hireDate').value = e.hire_date ? e.hire_date.slice(0, 10) : '';
+        document.getElementById('empStatus').value = e.status;
+        new bootstrap.Modal(document.getElementById('empModal')).show();
+    }
+
+    async function saveEmployee() {
+        const id = document.getElementById('empId').value;
+        const payload = {
+            first_name: document.getElementById('firstName').value.trim(),
+            last_name: document.getElementById('lastName').value.trim(),
+            email: document.getElementById('empEmail').value.trim(),
+            phone: document.getElementById('empPhone').value.trim(),
+            department: document.getElementById('department').value,
+            position: document.getElementById('position').value.trim(),
+            salary: document.getElementById('salary').value,
+            hire_date: document.getElementById('hireDate').value,
+            status: document.getElementById('empStatus').value
+        };
+        if (!payload.first_name || !payload.last_name) { showToast('First and last name required', 'warning'); return; }
+
+        const btn = document.getElementById('saveEmpBtn');
+        setButtonLoading(btn, true);
+        try {
+            if (id) { await apiPut(`/employees/${id}`, payload); showToast('Employee updated!', 'success'); }
+            else { await apiPost('/employees', payload); showToast('Employee added!', 'success'); }
+            bootstrap.Modal.getInstance(document.getElementById('empModal')).hide();
+            loadEmployees();
+        } catch (err) { showToast(`Error: ${err.message}`, 'error'); }
+        finally { setButtonLoading(btn, false); }
+    }
+
+    async function deleteEmployee(id) {
+        if (!confirmDelete()) return;
+        try { await apiDelete(`/employees/${id}`); showToast('Employee deleted', 'success'); loadEmployees(); }
+        catch (err) { showToast(`Error: ${err.message}`, 'error'); }
+    }
+
+    loadEmployees();
+</script>
+</body>
+</html>
