@@ -228,7 +228,7 @@
                 data: {
                     labels: modelLabels,
                     datasets: [{
-                        label: 'Revenue (USD)',
+                        label: 'Revenue (rupees)',
                         data: modelRevenue,
                         backgroundColor: ['#3b82f6', '#16a34a', '#d97706', '#7c3aed', '#0891b2', '#dc2626'],
                         borderRadius: 8
@@ -242,7 +242,7 @@
                         x: {
                             beginAtZero: true,
                             grid: { color: '#f1f5f9' },
-                            ticks: { callback: v => '$' + (v >= 1000 ? (v/1000).toFixed(0) + 'k' : v) }
+                            ticks: { callback: v => '₹' + (v >= 1000 ? (v/1000).toFixed(0) + 'k' : v) }
                         },
                         y: { grid: { display: false } }
                     }
@@ -280,7 +280,7 @@
                 data: {
                     labels: monthLabels,
                     datasets: [{
-                        label: 'Revenue (USD)',
+                        label: 'Revenue (rupees)',
                         data: monthRevenue,
                         borderColor: '#3b82f6',
                         backgroundColor: 'rgba(59,130,246,0.08)',
@@ -297,7 +297,7 @@
                     scales: {
                         y: {
                             beginAtZero: true, grid: { color: '#f1f5f9' },
-                            ticks: { callback: v => '$' + (v >= 1000 ? (v/1000).toFixed(0) + 'k' : v) }
+                            ticks: { callback: v => '₹' + (v >= 1000 ? (v/1000).toFixed(0) + 'k' : v) }
                         },
                         x: { grid: { display: false } }
                     }
